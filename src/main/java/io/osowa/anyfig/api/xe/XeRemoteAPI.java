@@ -15,7 +15,7 @@ public class XeRemoteAPI implements RemoteAPI {
     @Override
     public void start(RemoteAPI.Config config, Anyfig anyfig) {
         if (config.token == null) {
-            throw new ConfigurationException("Refusing to start Xe HTTP API without a token");
+            throw new ConfigurationException("Refusing to start Remote API without a token");
         }
         host = new Host(config.level, config.bindAddress, config.port, config.peers, config.dataDir, config.token, anyfig);
         try {
