@@ -1,5 +1,7 @@
 package io.osowa.anyfig;
 
+import com.google.common.base.Strings;
+
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,14 +68,27 @@ public class Registrar {
         return Optional.empty();
     }
 
-    public synchronized void registerRemote(Field field) {
-        remoteKeys.put(
-            Utils.encodeField(field),
-            field);
+    public synchronized void registerRemote(Field field, Configurable annotation) {
+        String key = annotation.remote();
+        if (key.isEmpty()) {
+            key = Utils.encodeField(field);
+        }
+        remoteKeys.put(key, field);
     }
 
     public synchronized Set<String> enumerateRemote() {
         return remoteKeys.keySet();
+    }
+
+    public synchronized Optional<Field> getRemoteKey(String key) {
+        return Optional.ofNullable(remoteKeys.get(key));
+    }
+
+    public Possible<Object> getRemote(String key) throws Exception {
+        Optional<Field> field = getRemoteKey(key);
+        return field.isPresent()
+            ? Possible.of(Utils.getField(field.get()))
+            : Possible.absent();
     }
 
 }

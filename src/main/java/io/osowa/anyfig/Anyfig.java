@@ -5,8 +5,6 @@ import io.osowa.anyfig.api.xe.XeRemoteAPI;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -457,8 +455,8 @@ public class Anyfig implements AutoCloseable {
      * - anyfig.remote-api.peers / ANYFIG_REMOTE_API_PEERS
      * - anyfig.remote-api.token / ANYFIG_REMOTE_API_TOKEB
      */
-    public void enableRemoteAPI() {
-        enableRemoteAPI(new String[0]);
+    public RemoteAPI.Config enableRemoteAPI() {
+        return enableRemoteAPI(new String[0]);
     }
 
     /**
@@ -471,22 +469,23 @@ public class Anyfig implements AutoCloseable {
      * - anyfig.remote-api.peers / ANYFIG_REMOTE_API_PEERS / --anyfigRemoteAPIPeers
      * - anyfig.remote-api.token / ANYFIG_REMOTE_API_TOKEB / --anyfigRemoteAPIToken
      */
-    public void enableRemoteAPI(String[] args) {
+    public RemoteAPI.Config enableRemoteAPI(String[] args) {
         // dogfood Anyfig to pick up REST API configuration; but note that we create our
         // own nested Anyfig so there's no danger of invoking the client's callbacks
         Anyfig anyfig = new Anyfig();
         RemoteAPI.Config config = new RemoteAPI.Config();
         anyfig.configure(args, config);
-        enableRemoteAPI(config);
+        return enableRemoteAPI(config);
     }
 
     /**
      * Enable Remote API with the given configuration.
      * @param config
      */
-    public void enableRemoteAPI(RemoteAPI.Config config) {
+    public RemoteAPI.Config enableRemoteAPI(RemoteAPI.Config config) {
         disableRESTAPI(); // just in case...
         remoteapi.start(config, this);
+        return config;
     }
 
     /**
@@ -509,8 +508,8 @@ public class Anyfig implements AutoCloseable {
     // use by the REST API, but... have at it... knock yourself out...
 
     // register the given field for the Remote API
-    public void remoteRegister(Field field) {
-        registrar.registerRemote(field);
+    public void remoteRegister(Field field, Configurable annotation) {
+        registrar.registerRemote(field, annotation);
     }
 
     // enumerate the keys that are registered with from the Remote API
@@ -518,14 +517,19 @@ public class Anyfig implements AutoCloseable {
         return registrar.enumerateRemote();
     }
 
+    // get the field that is associated with the given remote key (or Optional.absent() if the key is invalid)
+    public Optional<Field> getRemoteKey(String key) {
+        return registrar.getRemoteKey(key);
+    }
+
     // get an object by its Remote API key
     public Possible<Object> remoteGet(String key) throws Exception {
-        return Possible.of(Utils.getField(key));
+        return registrar.getRemote(key);
     }
 
     // set an object as requested to do so by the Remote API
-    public void remoteSet(String key, Object value) throws Exception {
-        Utils.setField(key, value);
+    public void remoteSet(Field field, Object value) throws Exception {
+        Utils.setField(field, value);
     }
 
 }

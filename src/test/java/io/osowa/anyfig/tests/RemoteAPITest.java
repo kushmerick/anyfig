@@ -13,6 +13,7 @@ import org.apache.http.util.EntityUtils;
 import org.junit.Test;
 
 import io.osowa.anyfig.Anyfig;
+import io.osowa.anyfig.Configurable;
 import io.osowa.anyfig.api.RemoteAPI;
 
 import java.net.ServerSocket;
@@ -21,6 +22,7 @@ import java.util.Collections;
 import static io.osowa.anyfig.api.RemoteAPI.APPLICATION_JSON;
 import static io.osowa.anyfig.api.RemoteAPI.AUTHORIZATION_HEADER;
 import static io.osowa.anyfig.api.RemoteAPI.CONTENT_TYPE_HEADER;
+import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
 import static junit.framework.TestCase.assertEquals;
@@ -122,6 +124,49 @@ public class RemoteAPITest {
     }
 
     @Test
+    public void testCanNotSetBlockedFields() throws Exception {
+        RemoteAPI.Config config = makeConfig();
+        try (Anyfig anyfig = new Anyfig()) {
+            anyfig.configure(TestRemoteAPI.class);
+            anyfig.enableRemoteAPI(config);
+            try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
+                String url = "http://localhost:" + config.port + "/anyfig/" + TestRemoteAPI.class.getName() + ".blocked";
+                HttpPatch patch = new HttpPatch(url);
+                patch.setHeader(AUTHORIZATION_HEADER, TOKEN);
+                patch.setHeader(CONTENT_TYPE_HEADER, APPLICATION_JSON);
+                RemoteAPI.PatchRequest request = new RemoteAPI.PatchRequest();
+                request.value = 2;
+                patch.setEntity(new StringEntity(GSON.toJson(request)));
+                try (CloseableHttpResponse response = httpclient.execute(patch)) {
+                    assertEquals(HTTP_FORBIDDEN, response.getStatusLine().getStatusCode());
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testCanSetCustomKey() throws Exception {
+        RemoteAPI.Config config = makeConfig();
+        try (Anyfig anyfig = new Anyfig()) {
+            anyfig.configure(TestRemoteAPI.class);
+            anyfig.enableRemoteAPI(config);
+            try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
+                String url = "http://localhost:" + config.port + "/anyfig/custom-key";
+                HttpPatch patch = new HttpPatch(url);
+                patch.setHeader(AUTHORIZATION_HEADER, TOKEN);
+                patch.setHeader(CONTENT_TYPE_HEADER, APPLICATION_JSON);
+                RemoteAPI.PatchRequest request = new RemoteAPI.PatchRequest();
+                request.value = 2;
+                patch.setEntity(new StringEntity(GSON.toJson(request)));
+                try (CloseableHttpResponse response = httpclient.execute(patch)) {
+                    assertEquals(HTTP_OK, response.getStatusLine().getStatusCode());
+                    assertEquals(request.value, TestRemoteAPI.custom);
+                }
+            }
+        }
+    }
+
+    @Test
     public void testCanPatch() throws Exception {
         RemoteAPI.Config config = makeConfig();
         try (Anyfig anyfig = new Anyfig()) {
@@ -162,6 +207,10 @@ public class RemoteAPITest {
     public static class TestRemoteAPI {
         private static final int DEFAULT_FIELD = 1;
         public static int field;
+        @Configurable(blockremote = true)
+        public static int blocked;
+        @Configurable(remote = "custom-key")
+        public static int custom;
     }
 
 }

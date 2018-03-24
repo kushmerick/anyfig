@@ -6,7 +6,6 @@ import java.util.List;
 public class RootMechanism extends SequentialMechanism {
 
     private final List<Mechanism> policies = Arrays.asList(
-        // TODO: web
         new EnvVarMechanism(),
         new PropertyMechanism(),
         new ArgsMechanism(),

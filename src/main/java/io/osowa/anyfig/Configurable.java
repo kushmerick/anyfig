@@ -37,15 +37,15 @@ public @interface Configurable {
     // the command-line argument from which to retrieve the value; defaults to "--someField"
     String argument() default "";
 
-    // the property from which to retrieve the value; defaults to "-DsomeField"
+    // the property from which to retrieve the value; defaults to checking both "-DsomeField"
     // or "-Dsome.pkg.SomeClass.someField"
     String property() default "";
 
-    // the environmen variable from which to retrieve the value; defaults to "SOME_FIELD"
+    // the environment variable from which to retrieve the value; defaults to "SOME_FIELD"
     String envvar() default "";
 
     // optional remote HTTP API for reading/writing configurable fields:
-    // the key for setting thr value; defaults to "some.pkg.SomeClass.someField"
+    // the key for setting the value; defaults to "some.pkg.SomeClass.someField"
     String remote() default "";
     // block this field from being set by the remote API
     boolean blockremote() default false;

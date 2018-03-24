@@ -21,7 +21,7 @@ public class PropertyMechanism extends KeyValueMechanism {
         String property = annotation.property();
         if (property.isEmpty()) {
             candidates.add(field.getName()); // someField
-            candidates.add(field.getDeclaringClass().getName() + '.' + field.getName()); // some.package.SomeClass.someField
+            candidates.add(Utils.encodeField(field)); // some.package.SomeClass.someField
         } else {
             candidates.add(property);
         }

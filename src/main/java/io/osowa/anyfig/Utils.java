@@ -146,20 +146,18 @@ public class Utils {
         return Class.forName(decoded.left).getDeclaredField(decoded.right);
     }
 
-    public static Object getField(String key) throws Exception {
-        return getField(decodeField(key));
-    }
-
     public static Object getField(Field field) throws Exception {
         return whileAccessible(field, () -> field.get(null));
     }
 
-    public static void setField(String key, Object value) throws Exception {
-        setField(decodeField(key), value);
-    }
-
     public static void setField(Field field, Object value) throws Exception {
         whileAccessible(field, () -> field.set(null, COERCER.coerce(value, field.getType())));
+    }
+
+    public static Configurable getAnnotation(Field field) {
+        return field.isAnnotationPresent(Configurable.class)
+            ? field.getAnnotation(Configurable.class)
+            : Configurable.DEFAULT;
     }
 
 }

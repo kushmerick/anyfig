@@ -3,15 +3,17 @@ package io.osowa.anyfig.api.xe;
 import com.vmware.xenon.common.Operation;
 import com.vmware.xenon.common.StatelessService;
 import com.vmware.xenon.common.UriUtils;
-import com.vmware.xenon.common.Utils;
 
 import io.osowa.anyfig.Anyfig;
 import io.osowa.anyfig.Possible;
+import io.osowa.anyfig.Utils;
 import io.osowa.anyfig.api.RemoteAPI;
 
+import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 // public client-facing service; all other Xe services are intended for Anyfig's internal use only
 
@@ -68,14 +70,14 @@ public class PublicService extends StatelessService {
             for (String key : anyfig.remoteEnumerate()) {
                 try {
                     Possible<Object> value = anyfig.remoteGet(key);
-                    if (value.present()) { // this should definitely be true; but guarad against race conditions
+                    if (value.present()) { // this should definitely be true; but guard against race conditions
                         response.values.put(key, value.get());
                     }
                 } catch (Exception failure) {
                     // invalid field; we're enumerating our own keys not taking an input from the
                     // user, so we could just just move on; but this definitely shouldn't happen, so
                     // let's fail fast and find out for sure.
-                    response.error = "Internal error: Failure while retrieving key `" + key + "`: " + Utils.toString(failure);
+                    response.error = "Internal error: Failure while retrieving key `" + key + "`: " + com.vmware.xenon.common.Utils.toString(failure);
                     get.setStatusCode(Operation.STATUS_CODE_INTERNAL_ERROR);
                     break;
                 }
@@ -100,14 +102,38 @@ public class PublicService extends StatelessService {
             values = request.values;
         }
         if (values != null) {
+            boolean blocked = false;
+            boolean unknown = false;
+            String key = null;
             try {
                 for (Map.Entry<String, Object> entry : values.entrySet()) {
-                    anyfig.remoteSet(entry.getKey(), entry.getValue());
+                    key = entry.getKey();
+                    Optional<Field> field = anyfig.getRemoteKey(key);
+                    if (field.isPresent()) {
+                        if (Utils.getAnnotation(field.get()).blockremote()) {
+                            blocked = true;
+                            throw new RuntimeException();
+                        } else {
+                            anyfig.remoteSet(field.get(), entry.getValue());
+                        }
+                    } else {
+                        unknown = true;
+                        throw new RuntimeException();
+                    }
                 }
             } catch (Exception failure) {
                 // TODO: Rollback values that were already set?  Or at least tell the client?  Eeek, yuck, ...
-                response.error = "Failure while setting `" + values + "`: " + failure;
-                patch.setStatusCode(Operation.STATUS_CODE_BAD_REQUEST); // TODO: return 404 rather than 400 for PATCH /anyfig/X for invalid X
+                int code = Operation.STATUS_CODE_BAD_REQUEST;
+                if (blocked) {
+                    response.error = "Field `" + key + "` is blocked";
+                    code = Operation.STATUS_CODE_FORBIDDEN;
+                } else if (unknown) {
+                    response.error = "Field `" + key + "` does not exist";
+                    code = Operation.STATUS_CODE_NOT_FOUND;
+                } else {
+                    response.error = "Failure while setting `" + values + "`: " + failure;
+                }
+                patch.setStatusCode(code);
             }
         }
         patch.setBody(response);

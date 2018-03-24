@@ -61,10 +61,10 @@ public class Configurer {
                 throw new ConfigurationException("Missing object for instance field");
             }
         }
-        Configurable annotation = field.isAnnotationPresent(Configurable.class)
-            ? field.getAnnotation(Configurable.class)
-            : Configurable.DEFAULT;
-        anyfig.remoteRegister(field);
+        Configurable annotation = Utils.getAnnotation(field);
+        if (isStatic(field)) {
+            anyfig.remoteRegister(field, annotation); // only static fields can be configured by the Remote API
+        }
         Optional<Callbacks> callbacks = registrar.getCallbacks(object, field);
         Possible<?> oldVal[] = { Possible.absent() };
         Possible<?> newVal[] = { Possible.absent() };

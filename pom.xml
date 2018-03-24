@@ -5,8 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-      <java.version>1.8</java.version>
-      <maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
+        <java.version>1.8</java.version>
     </properties>
 
     <groupId>org.oso</groupId>
@@ -42,18 +41,41 @@
     </dependencies>
 
     <build>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>${maven.compiler.plugin.version}</version>
-          <configuration>
-            <target>${java.version}</target>
-            <source>${java.version}</source>
-            <compilerId>javac</compilerId>
-          </configuration>
-        </plugin>
-      </plugins>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <target>${java.version}</target>
+                    <source>${java.version}</source>
+                    <compilerId>javac</compilerId>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <!-- Just for the Example demo; in real life you'll use Anyfig as a library, not an executable JAR -->
+                            <mainClass>io.osowa.anyfig.examples.Example</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
 </project>
