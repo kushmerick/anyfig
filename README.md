@@ -1,6 +1,6 @@
 # Anyfig
 
-Anyfig is a flexible Java configuration management utility.
+Anyfig is a flexible Java configuration utility.
 
 [![Build Status](https://travis-ci.org/kushmerick/anyfig.svg?branch=master)](https://travis-ci.org/kushmerick/anyfig)
 
