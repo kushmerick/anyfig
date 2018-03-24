@@ -8,7 +8,7 @@ Anyfig is a flexible Java configuration utility.
 
 Anyfig supports:
 
-* configuring a class's static field, or an object's instance fields;
+* configuring a class's static fields, or an object's instance fields;
 * retrieving values from literals, other fields, properties, environment variables, and command line arguments;
   the retrieved value can be anything: strings, wrapped or primitive numbers/booleans/characters, enums, or arbitrary
   objects serialized as JSON;
@@ -18,8 +18,8 @@ Anyfig supports:
 * intuitively coercing between different data types;
 * a Remote API for enumerating and setting configurable fields;
 * callbacks that are invoked when fields are modified (including failure callbacks in case something goes wrong);
-  callbacks can be arbitrary Consumer or static Method objects, or a Logger to which informative
-  messages should be sent; callbacks can be registered individually on objects, fields, classes or packages;
+  callbacks can be arbitrary Consumer or static Methods, or a Logger to which informative messages should be sent;
+  callbacks can be registered individually on objects, fields, classes or packages;
 * configuring any number of classes or objects, with either shared or specialized callbacks -- whatever is convenient
   for your application.
 
@@ -113,7 +113,7 @@ fields:
     { "values": {
         "io.osowa.anyfig.examples.Example$Settings.minSpeed": 0.0,
         "io.osowa.anyfig.examples.Example$Settings.maxVehicles": 0,
-        "io.osowa.anyfig.examples.Example$Settings.mode":"LEFT" } }
+        "io.osowa.anyfig.examples.Example$Settings.mode": "LEFT" } }
 
 We can also configure fields using this API:
 
