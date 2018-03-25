@@ -717,6 +717,7 @@ public class AnyfigTest {
         anyfig.configure(TestRegisterPackageCallbacks.class);
         assertEquals(1, deltas.size());
         assertTrue(failures.isEmpty());
+        assertEquals(TestRegisterPackageCallbacks.DEFAULT_FIELD, TestRegisterPackageCallbacks.field);
     }
     private static class TestRegisterPackageCallbacks {
         final static int DEFAULT_FIELD = 2;
@@ -734,6 +735,7 @@ public class AnyfigTest {
         anyfig.configure(TestRegisterPackageConsumerCallbacks.class);
         assertEquals(1, deltas.size());
         assertTrue(failures.isEmpty());
+        assertEquals(TestRegisterPackageConsumerCallbacks.DEFAULT_FIELD, TestRegisterPackageConsumerCallbacks.field);
     }
     private static class TestRegisterPackageConsumerCallbacks {
         final static int DEFAULT_FIELD = 2;
@@ -746,10 +748,11 @@ public class AnyfigTest {
         anyfig.register(callback, TestRegisterPackagesMethodCallback.class.getPackage());
         anyfig.configure(TestRegisterPackagesMethodCallback.class);
         assertEquals(1, TestRegisterPackagesMethodCallback.deltas);
+        assertEquals(2, TestRegisterPackagesMethodCallback.field);
     }
     private static class TestRegisterPackagesMethodCallback {
         @Configurable(literal = true, value = "2")
-        private static int field1 = 1;
+        private static int field = 1;
         private static int deltas = 0;
         public static void callback(Delta delta) {
             deltas++;
@@ -772,6 +775,7 @@ public class AnyfigTest {
         anyfig.configure(logger, test);
         assertEquals(1, info[0]);
         assertEquals(1, warn[0]);
+        assertEquals(2, test.field1);
     }
     private static class TestRegisterPackageLoggerCallback {
         @Configurable(literal = true, value = "2")
@@ -786,6 +790,7 @@ public class AnyfigTest {
         anyfig.configure(TestRegisterGlobalCallbacks.class);
         assertEquals(1, deltas.size());
         assertTrue(failures.isEmpty());
+        assertEquals(TestRegisterGlobalCallbacks.DEFAULT_FIELD, TestRegisterGlobalCallbacks.field);
     }
     private static class TestRegisterGlobalCallbacks {
         final static int DEFAULT_FIELD = 2;
@@ -802,6 +807,7 @@ public class AnyfigTest {
         anyfig.configure(TestRegisterGlobalConsumerCallbacks.class);
         assertEquals(1, deltas.size());
         assertTrue(failures.isEmpty());
+        assertEquals(TestRegisterGlobalConsumerCallbacks.DEFAULT_FIELD, TestRegisterGlobalConsumerCallbacks.field);
     }
     private static class TestRegisterGlobalConsumerCallbacks {
         final static int DEFAULT_FIELD = 2;
@@ -814,10 +820,11 @@ public class AnyfigTest {
         anyfig.register(callback);
         anyfig.configure(TestRegisterGlobalsMethodCallback.class);
         assertEquals(1, TestRegisterGlobalsMethodCallback.deltas);
+        assertEquals(2, TestRegisterGlobalsMethodCallback.field);
     }
     private static class TestRegisterGlobalsMethodCallback {
         @Configurable(literal = true, value = "2")
-        private static int field1 = 1;
+        private static int field = 1;
         private static int deltas = 0;
         public static void callback(Delta delta) {
             deltas++;
@@ -840,6 +847,7 @@ public class AnyfigTest {
         anyfig.configure(logger, test);
         assertEquals(1, info[0]);
         assertEquals(1, warn[0]);
+        assertEquals(2, test.field1);
     }
     private static class TestRegisterGlobalLoggerCallback {
         @Configurable(literal = true, value = "2")
@@ -854,6 +862,7 @@ public class AnyfigTest {
         anyfig.configure(callback, failureCallback, field);
         assertEquals(1, deltas.size());
         assertTrue(failures.isEmpty());
+        assertEquals(TestConfigureField.DEFAULT_FIELD, TestConfigureField.field);
     }
     private static class TestConfigureField {
         final static int DEFAULT_FIELD = 2;
@@ -866,6 +875,7 @@ public class AnyfigTest {
         anyfig.configure(callback, field);
         assertEquals(1, deltas.size());
         assertTrue(failures.isEmpty());
+        assertEquals(TestConfigureFieldNoFailureCallback.DEFAULT_FIELD, TestConfigureFieldNoFailureCallback.field);
     }
     private static class TestConfigureFieldNoFailureCallback {
         final static int DEFAULT_FIELD = 2;
@@ -883,6 +893,7 @@ public class AnyfigTest {
             field);
         assertEquals(1, deltas.size());
         assertTrue(failures.isEmpty());
+        assertEquals(TestConfigureFieldBiConsumer.DEFAULT_FIELD, TestConfigureFieldBiConsumer.field);
     }
     private static class TestConfigureFieldBiConsumer {
         final static int DEFAULT_FIELD = 2;
@@ -896,6 +907,7 @@ public class AnyfigTest {
         anyfig.configure(field);
         assertEquals(1, deltas.size());
         assertTrue(failures.isEmpty());
+        assertEquals(TestRegisterFieldCallbacks.DEFAULT_FIELD, TestRegisterFieldCallbacks.field);
     }
     private static class TestRegisterFieldCallbacks {
         final static int DEFAULT_FIELD = 2;
@@ -914,6 +926,7 @@ public class AnyfigTest {
         anyfig.configure(field);
         assertEquals(1, deltas.size());
         assertTrue(failures.isEmpty());
+        assertEquals(TestRegisterFieldBiConsumer.DEFAULT_FIELD, TestRegisterFieldBiConsumer.field);
     }
     private static class TestRegisterFieldBiConsumer {
         final static int DEFAULT_FIELD = 2;
