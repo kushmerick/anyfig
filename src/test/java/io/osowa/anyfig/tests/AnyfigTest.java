@@ -1,5 +1,6 @@
 package io.osowa.anyfig.tests;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,6 +37,11 @@ public class AnyfigTest {
         anyfig = new Anyfig();
         deltas = new ArrayList<>();
         failures = new ArrayList<>();
+    }
+
+    @After
+    public void teardown() throws Exception {
+        anyfig.close();
     }
 
     @Test
