@@ -3,6 +3,7 @@
 Anyfig is a flexible Java configuration utility.
 
 [![Build Status](https://travis-ci.org/kushmerick/anyfig.svg?branch=master)](https://travis-ci.org/kushmerick/anyfig)
+[![Coverage Status](https://coveralls.io/repos/github/kushmerick/anyfig/badge.svg?branch=master)](https://coveralls.io/github/kushmerick/anyfig?branch=master)
 
 # Overview
 

@@ -20,7 +20,7 @@ public class ConstMechanism extends SequentialMechanism {
         try {
             return tryConstant(constant, field.getDeclaringClass().getName());
         } catch (Exception ignored) {
-            // we guessed for the name of the constant, but couldn't find it; no big deal, just proceed to the other policies
+            // we guessed for the name of the constant, but couldn't find it; no big deal, just proceed to the other mechanisms
             // TODO: Interesting... Our tests have zero coverage here??!!
             return Possible.absent();
         }
@@ -63,14 +63,14 @@ public class ConstMechanism extends SequentialMechanism {
         return Possible.absent();
     }
 
-    private final List<Mechanism> policies = Arrays.asList(
-            defaultConstMechanism,
-            customConstMechanism
+    private final List<Mechanism> mechanisms = Arrays.asList(
+        defaultConstMechanism,
+        customConstMechanism
     );
 
     @Override
     List<Mechanism> getMechanisms() {
-        return policies;
+        return mechanisms;
     }
 
 }
