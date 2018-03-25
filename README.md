@@ -131,13 +131,12 @@ TODO: Coming soon... consume as a Maven dependency...
 
 # Comparison
 
-Anyfig is more ambitious than [Apache Commons
-Configuration](http://commons.apache.org/proper/commons-configuration).
-ACC allows your to write code to pull configration from various
-sources.  But Anyfig goes further: it writes these values into your
-the objects that hold your configuration, invokes callbacks so that
-your code can respond appropriately, and supports a Remote API.
+Anyfig is more ambitious than [Apache Commons Configuration](http://commons.apache.org/proper/commons-configuration).
+ACC allows you to write code to pull configuration from various sources.  But Anyfig goes further: it writes these
+values into the objects that hold your configuration, invokes callbacks so that your code can respond appropriately,
+supports a Remote API.
 
 # Coming Soon
 
 TODO: Cluster support: Anyfig will support propogating Remote API changes across the members of a cluster.
+TODO: History & Rollback
