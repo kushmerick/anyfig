@@ -132,7 +132,7 @@ automagic Logger callbacks.
 
 # Usage
 
-TODO: Coming soon... consume as a Maven dependency...
+* TODO: Coming soon... consume as a Maven dependency...
 
 # Comparison
 
@@ -143,5 +143,6 @@ supports a Remote API.
 
 # Coming Soon
 
-TODO: Cluster support: Anyfig will support propogating Remote API changes across the members of a cluster.
-TODO: History & Rollback
+* TODO: Cluster support: Anyfig will support propogating Remote API changes across the members of a cluster.
+
+* TODO: History & Rollback
