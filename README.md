@@ -125,6 +125,11 @@ We can now confirm this operation by getting for this particular field:
     $ curl -H 'Authorization: s3kret' 'http://localhost:9111/anyfig/io.osowa.anyfig.examples.Example$Settings.minSpeed'
     {"value": 10.0}
 
+Naturally, Anyfig [uses itself](https://github.com/kushmerick/anyfig/blob/master/src/main/java/io/osowa/anyfig/Anyfig.java#L475-L477) to configure
+the Remote API.  See [RemoteAPI.Config](https://github.com/kushmerick/anyfig/blob/master/src/main/java/io/osowa/anyfig/api/RemoteAPI.java#L17-L45)
+for some advanced Anyfig features, such as blocking fields from being configurable by the Remote API, and redacting fields when using the
+automagic Logger callbacks.
+
 # Usage
 
 TODO: Coming soon... consume as a Maven dependency...
