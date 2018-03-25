@@ -710,4 +710,214 @@ public class AnyfigTest {
         @Configurable(literal=true, value="BAR")
         private static Foo field;
     }
+
+    @Test
+    public void testRegisterPackageCallbacks() {
+        anyfig.register(callback, TestRegisterPackageCallbacks.class.getPackage());
+        anyfig.configure(TestRegisterPackageCallbacks.class);
+        assertEquals(1, deltas.size());
+        assertTrue(failures.isEmpty());
+    }
+    private static class TestRegisterPackageCallbacks {
+        final static int DEFAULT_FIELD = 2;
+        static int field = 1;
+    }
+
+    @Test
+    public void testRegisterPackageBiConsumerCallbacks() {
+        anyfig.register(
+            (delta, failure) -> {
+                if (delta != null) callback.accept(delta);
+                if (failure != null) failureCallback.accept(failure);
+            },
+            TestRegisterPackageConsumerCallbacks.class.getPackage());
+        anyfig.configure(TestRegisterPackageConsumerCallbacks.class);
+        assertEquals(1, deltas.size());
+        assertTrue(failures.isEmpty());
+    }
+    private static class TestRegisterPackageConsumerCallbacks {
+        final static int DEFAULT_FIELD = 2;
+        static int field = 1;
+    }
+
+    @Test
+    public void testRegisterPackageMethodCallback() throws Exception {
+        Method callback = TestRegisterPackagesMethodCallback.class.getMethod("callback", Delta.class);
+        anyfig.register(callback, TestRegisterPackagesMethodCallback.class.getPackage());
+        anyfig.configure(TestRegisterPackagesMethodCallback.class);
+        assertEquals(1, TestRegisterPackagesMethodCallback.deltas);
+    }
+    private static class TestRegisterPackagesMethodCallback {
+        @Configurable(literal = true, value = "2")
+        private static int field1 = 1;
+        private static int deltas = 0;
+        public static void callback(Delta delta) {
+            deltas++;
+        }
+    }
+
+    @Test
+    public void testRegisterPackageLoggerCalllback() {
+        TestRegisterPackageLoggerCallback test = new TestRegisterPackageLoggerCallback();
+        int[] info = { 0 }, warn = { 0 };
+        Logger logger = new Logger(null, null) {
+            @Override public void info(String msg) {
+                info[0]++;
+            }
+            @Override public void warning(String msg) {
+                warn[0]++;
+            }
+        };
+        anyfig.register(logger, TestRegisterPackageLoggerCallback.class.getPackage());
+        anyfig.configure(logger, test);
+        assertEquals(1, info[0]);
+        assertEquals(1, warn[0]);
+    }
+    private static class TestRegisterPackageLoggerCallback {
+        @Configurable(literal = true, value = "2")
+        private int field1 = 1;
+        @Configurable(literal = true, value = "Ouch")
+        private int field2 = 1;
+    }
+
+    @Test
+    public void testRegisterGlobalCallbacks() {
+        anyfig.register(callback);
+        anyfig.configure(TestRegisterGlobalCallbacks.class);
+        assertEquals(1, deltas.size());
+        assertTrue(failures.isEmpty());
+    }
+    private static class TestRegisterGlobalCallbacks {
+        final static int DEFAULT_FIELD = 2;
+        static int field = 1;
+    }
+
+    @Test
+    public void testRegisterGlobalBiConsumerCallbacks() {
+        anyfig.register(
+                (delta, failure) -> {
+                    if (delta != null) callback.accept(delta);
+                    if (failure != null) failureCallback.accept(failure);
+                });
+        anyfig.configure(TestRegisterGlobalConsumerCallbacks.class);
+        assertEquals(1, deltas.size());
+        assertTrue(failures.isEmpty());
+    }
+    private static class TestRegisterGlobalConsumerCallbacks {
+        final static int DEFAULT_FIELD = 2;
+        static int field = 1;
+    }
+
+    @Test
+    public void testRegisterGlobalMethodCallback() throws Exception {
+        Method callback = TestRegisterGlobalsMethodCallback.class.getMethod("callback", Delta.class);
+        anyfig.register(callback);
+        anyfig.configure(TestRegisterGlobalsMethodCallback.class);
+        assertEquals(1, TestRegisterGlobalsMethodCallback.deltas);
+    }
+    private static class TestRegisterGlobalsMethodCallback {
+        @Configurable(literal = true, value = "2")
+        private static int field1 = 1;
+        private static int deltas = 0;
+        public static void callback(Delta delta) {
+            deltas++;
+        }
+    }
+
+    @Test
+    public void testRegisterGlobalLoggerCalllback() {
+        TestRegisterGlobalLoggerCallback test = new TestRegisterGlobalLoggerCallback();
+        int[] info = { 0 }, warn = { 0 };
+        Logger logger = new Logger(null, null) {
+            @Override public void info(String msg) {
+                info[0]++;
+            }
+            @Override public void warning(String msg) {
+                warn[0]++;
+            }
+        };
+        anyfig.register(logger);
+        anyfig.configure(logger, test);
+        assertEquals(1, info[0]);
+        assertEquals(1, warn[0]);
+    }
+    private static class TestRegisterGlobalLoggerCallback {
+        @Configurable(literal = true, value = "2")
+        private int field1 = 1;
+        @Configurable(literal = true, value = "Ouch")
+        private int field2 = 1;
+    }
+
+    @Test
+    public void testConfigureField() throws Exception {
+        Field field = TestConfigureField.class.getDeclaredField("field");
+        anyfig.configure(callback, failureCallback, field);
+        assertEquals(1, deltas.size());
+        assertTrue(failures.isEmpty());
+    }
+    private static class TestConfigureField {
+        final static int DEFAULT_FIELD = 2;
+        static int field = 1;
+    }
+
+    @Test
+    public void testConfigureFieldNoFailureCallback() throws Exception {
+        Field field = TestConfigureFieldNoFailureCallback.class.getDeclaredField("field");
+        anyfig.configure(callback, field);
+        assertEquals(1, deltas.size());
+        assertTrue(failures.isEmpty());
+    }
+    private static class TestConfigureFieldNoFailureCallback {
+        final static int DEFAULT_FIELD = 2;
+        static int field = 1;
+    }
+
+    @Test
+    public void testConfigureFieldBiConsumer() throws Exception {
+        Field field = TestConfigureFieldBiConsumer.class.getDeclaredField("field");
+        anyfig.configure(
+            (delta, failure) -> {
+                if (delta != null) callback.accept(delta);
+                if (failure != null) failureCallback.accept(failure);
+            },
+            field);
+        assertEquals(1, deltas.size());
+        assertTrue(failures.isEmpty());
+    }
+    private static class TestConfigureFieldBiConsumer {
+        final static int DEFAULT_FIELD = 2;
+        static int field = 1;
+    }
+
+    @Test
+    public void testRegisterFieldCallbacks() throws Exception {
+        Field field = TestRegisterFieldCallbacks.class.getDeclaredField("field");
+        anyfig.register(callback, failureCallback, field);
+        anyfig.configure(field);
+        assertEquals(1, deltas.size());
+        assertTrue(failures.isEmpty());
+    }
+    private static class TestRegisterFieldCallbacks {
+        final static int DEFAULT_FIELD = 2;
+        static int field = 1;
+    }
+
+    @Test
+    public void testRegisterFieldBiConsumer() throws Exception {
+        Field field = TestRegisterFieldBiConsumer.class.getDeclaredField("field");
+        anyfig.register(
+            (delta, failure) -> {
+                if (delta != null) callback.accept(delta);
+                if (failure != null) failureCallback.accept(failure);
+            },
+            field);
+        anyfig.configure(field);
+        assertEquals(1, deltas.size());
+        assertTrue(failures.isEmpty());
+    }
+    private static class TestRegisterFieldBiConsumer {
+        final static int DEFAULT_FIELD = 2;
+        static int field = 1;
+    }
+
 }
