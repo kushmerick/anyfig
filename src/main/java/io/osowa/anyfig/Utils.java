@@ -2,6 +2,8 @@ package io.osowa.anyfig;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
+import java.lang.reflect.Member;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
@@ -116,6 +118,14 @@ public class Utils {
         }
     }
 
+    public static boolean isFinal(Member member) {
+        return Modifier.isFinal(member.getModifiers());
+    }
+
+    public static boolean isStatic(Member member) {
+        return Modifier.isStatic(member.getModifiers());
+    }
+
     public interface FallibleRunnable {
         void run() throws Exception;
     }
@@ -139,11 +149,6 @@ public class Utils {
     public static Pair<String,String> decodeFieldKey(String key) {
         int lastdot = key.lastIndexOf('.');
         return Pair.of(key.substring(0, lastdot), key.substring(lastdot+1));
-    }
-
-    public static Field decodeField(String key) throws Exception {
-        Pair<String,String> decoded = decodeFieldKey(key);
-        return Class.forName(decoded.left).getDeclaredField(decoded.right);
     }
 
     public static Object getField(Field field) throws Exception {

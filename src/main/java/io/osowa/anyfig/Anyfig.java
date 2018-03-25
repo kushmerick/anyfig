@@ -522,11 +522,6 @@ public class Anyfig implements AutoCloseable {
         return registrar.getRemoteKey(key);
     }
 
-    // get an object by its Remote API key
-    public Possible<Object> remoteGet(String key) throws Exception {
-        return registrar.getRemote(key);
-    }
-
     // set an object as requested to do so by the Remote API
     public void remoteSet(Field field, Object value) throws Exception {
         Utils.setField(field, value);

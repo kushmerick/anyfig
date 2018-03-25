@@ -84,11 +84,4 @@ public class Registrar {
         return Optional.ofNullable(remoteKeys.get(key));
     }
 
-    public Possible<Object> getRemote(String key) throws Exception {
-        Optional<Field> field = getRemoteKey(key);
-        return field.isPresent()
-            ? Possible.of(Utils.getField(field.get()))
-            : Possible.absent();
-    }
-
 }

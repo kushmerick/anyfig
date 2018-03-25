@@ -46,7 +46,7 @@ public class Host extends ServiceHost {
     @Override
     public Host start() throws Throwable {
         super.start();
-        startService(new PublicService(anyfig));
+        startService(new AnyfigService(anyfig));
         return this;
     }
 

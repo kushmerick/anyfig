@@ -56,7 +56,7 @@ public class ConstMechanism extends SequentialMechanism {
         // doesn't work for private fields (?!!?), so we search for it instead:
         for (Field field : clazz.getDeclaredFields()) {
             // note that we intentionally don't actually verify that the field is `final`
-            if (field.getName().equals(constant) && Modifier.isStatic(field.getModifiers())) {
+            if (field.getName().equals(constant) && Utils.isStatic(field)) {
                 return Possible.of(Utils.getField(field));
             }
         }

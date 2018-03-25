@@ -11,7 +11,7 @@ public class Payload {
     public final Field field;
 
     public Payload(Optional<Object> object, Configurable annotation, Field field) {
-        if (object.isPresent() == Modifier.isStatic(field.getModifiers())) {
+        if (object.isPresent() == Utils.isStatic(field)) {
             if (object.isPresent()) {
                 throw new IllegalArgumentException("Object supplied for static field");
             } else {

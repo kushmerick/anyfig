@@ -17,7 +17,7 @@ import java.util.Optional;
 
 // public client-facing service; all other Xe services are intended for Anyfig's internal use only
 
-public class PublicService extends StatelessService {
+public class AnyfigService extends StatelessService {
 
     public final Anyfig anyfig;
 
@@ -26,7 +26,7 @@ public class PublicService extends StatelessService {
     private static final String KEY = "key";
     private static final String PATH_TEMPLATE = SELF_LINK + "/{" + KEY + '}';
 
-    public PublicService(Anyfig anyfig) {
+    public AnyfigService(Anyfig anyfig) {
         this.anyfig = anyfig;
         toggleOption(ServiceOption.URI_NAMESPACE_OWNER, true);
     }
@@ -51,17 +51,26 @@ public class PublicService extends StatelessService {
             // case 1: GET /anyfig/X
             String key = parsed.get(KEY);
             boolean got = false;
+            boolean blocked = false;
             try {
-                Possible<Object> value = anyfig.remoteGet(key);
-                if (value.present()) { // this should definitely be true; but guarad against race conditions
-                    response.value = value.get();
-                    got = true;
+                Optional<Field> field = anyfig.getRemoteKey(key);
+                if (field.isPresent()) {
+                    if (Utils.getAnnotation(field.get()).blockremote()) {
+                        blocked = true;
+                    } else {
+                        response.value = Utils.getField(field.get());
+                        got = true;
+                    }
                 }
             } catch (Exception ignored) {
                 // invalid field
             }
-            if (!got) {
-                response.error = "Unknown key `" + key + '`';
+            if (blocked) {
+                // paranoia: we refuse to register blocked fields, so we never actually get here
+                response.error = "Field `" + key + "` is blocked";
+                get.setStatusCode(Operation.STATUS_CODE_FORBIDDEN);
+            } else if (!got) {
+                response.error = "Field `" + key + "` does not exist";
                 get.setStatusCode(Operation.STATUS_CODE_NOT_FOUND);
             }
         } else {
@@ -69,9 +78,11 @@ public class PublicService extends StatelessService {
             response.values = new HashMap<>();
             for (String key : anyfig.remoteEnumerate()) {
                 try {
-                    Possible<Object> value = anyfig.remoteGet(key);
-                    if (value.present()) { // this should definitely be true; but guard against race conditions
-                        response.values.put(key, value.get());
+                    Optional<Field> field = anyfig.getRemoteKey(key);
+                    if (field.isPresent() && // should definitely be true, but guard against race conditions!!?
+                        !Utils.getAnnotation(field.get()).blockremote()) // paranoia: we refuse to register blocked fields, so this should always be true
+                    {
+                        response.values.put(key, Utils.getField(field.get()));
                     }
                 } catch (Exception failure) {
                     // invalid field; we're enumerating our own keys not taking an input from the
@@ -125,6 +136,7 @@ public class PublicService extends StatelessService {
                 // TODO: Rollback values that were already set?  Or at least tell the client?  Eeek, yuck, ...
                 int code = Operation.STATUS_CODE_BAD_REQUEST;
                 if (blocked) {
+                    // paranoia: we refuse to register blocked fields, so we never actually get here
                     response.error = "Field `" + key + "` is blocked";
                     code = Operation.STATUS_CODE_FORBIDDEN;
                 } else if (unknown) {

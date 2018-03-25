@@ -2,9 +2,7 @@ package io.osowa.anyfig;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -24,7 +22,7 @@ public class Configurer {
 
     public void configure(String[] args, Class<?> clazz) {
         for (Field field : clazz.getDeclaredFields()) {
-            if (isConfigurable(field) && isStatic(field)) {
+            if (isConfigurable(field) && Utils.isStatic(field)) {
                 configure(args, field);
             }
         }
@@ -34,7 +32,7 @@ public class Configurer {
         Optional<Object> oobject = Optional.of(object);
         for (Field field : object.getClass().getDeclaredFields()) {
             if (isConfigurable(field)) {
-                if (isStatic(field)) {
+                if (Utils.isStatic(field)) {
                     // note that we configure static fields encountered when configuring
                     // on object.  this totally seems like the right thing to do! but perhaps
                     // for certain scenarios it will seem weird?!
@@ -47,14 +45,14 @@ public class Configurer {
     }
 
     public void configure(String[] args, Field field) {
-        if (!Modifier.isStatic(field.getModifiers())) {
+        if (!Utils.isStatic(field)) {
             throw new ConfigurationException("Can't configure instance field without an object");
         }
         configure(args, Optional.empty(), field);
     }
 
     private void configure(String[] args, Optional<Object> object, Field field) {
-        if (object.isPresent() == Modifier.isStatic(field.getModifiers())) {
+        if (object.isPresent() == Utils.isStatic(field)) {
             if (object.isPresent()) {
                 throw new ConfigurationException("Object supplied for static field");
             } else {
@@ -62,8 +60,8 @@ public class Configurer {
             }
         }
         Configurable annotation = Utils.getAnnotation(field);
-        if (isStatic(field)) {
-            anyfig.remoteRegister(field, annotation); // only static fields can be configured by the Remote API
+        if (Utils.isStatic(field) && !annotation.blockremote()) {
+            anyfig.remoteRegister(field, annotation);
         }
         Optional<Callbacks> callbacks = registrar.getCallbacks(object, field);
         Possible<?> oldVal[] = { Possible.absent() };
@@ -139,7 +137,7 @@ public class Configurer {
     }
 
     private void invoke(Method method, Object... args) throws Exception {
-        if (!isStatic(method)) {
+        if (!Utils.isStatic(method)) {
             throw new ConfigurationException("Cannot invoke instance method callback");
         }
         Utils.whileAccessible(method, () -> {
@@ -160,18 +158,10 @@ public class Configurer {
         // TODO: should we ignore some field whose class is in package foo.bar.baz?
         // TODO: I think the intuitive answer is: Yes!
         return
-            !isFinal(field) &&
+            !Utils.isFinal(field) &&
             Stream.of(elements).allMatch(element ->
                 !element.isAnnotationPresent(Configurable.class) ||
                 !element.getAnnotation(Configurable.class).ignore());
-    }
-
-    private boolean isFinal(Member member) {
-        return Modifier.isFinal(member.getModifiers());
-    }
-
-    private boolean isStatic(Member member) {
-        return Modifier.isStatic(member.getModifiers());
     }
 
     private Possible<Object> getValue(Configurable annotation, Field field, String[] args) throws Exception {

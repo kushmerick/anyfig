@@ -22,7 +22,7 @@ import java.util.Collections;
 import static io.osowa.anyfig.api.RemoteAPI.APPLICATION_JSON;
 import static io.osowa.anyfig.api.RemoteAPI.AUTHORIZATION_HEADER;
 import static io.osowa.anyfig.api.RemoteAPI.CONTENT_TYPE_HEADER;
-import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
+import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
 import static junit.framework.TestCase.assertEquals;
@@ -138,7 +138,7 @@ public class RemoteAPITest {
                 request.value = 2;
                 patch.setEntity(new StringEntity(GSON.toJson(request)));
                 try (CloseableHttpResponse response = httpclient.execute(patch)) {
-                    assertEquals(HTTP_FORBIDDEN, response.getStatusLine().getStatusCode());
+                    assertEquals(HTTP_NOT_FOUND, response.getStatusLine().getStatusCode());
                 }
             }
         }
