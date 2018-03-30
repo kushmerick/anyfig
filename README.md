@@ -22,7 +22,8 @@ Anyfig supports:
   callbacks can be arbitrary Consumer or static Methods, or a Logger to which informative messages should be sent;
   callbacks can be registered individually on objects, fields, classes or packages;
 * configuring any number of classes or objects, with either shared or specialized callbacks -- whatever is convenient
-  for your application.
+  for your application;
+* inspecting the history of when changes occurred.
 
 The [AnyfigTest](http://github.com/kushmerick/anyfig/tree/master/src/test/java/io/osowa/anyfig/tests/AnyfigTest.java)
 and [RemoteAPITest](http://github.com/kushmerick/anyfig/tree/master/src/test/java/io/osowa/anyfig/tests/RemoteAPITest.java)

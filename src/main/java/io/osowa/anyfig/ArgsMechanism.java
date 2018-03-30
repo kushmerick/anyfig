@@ -13,6 +13,11 @@ public class ArgsMechanism extends KeyValueMechanism {
     private static final String SEPARATOR = "=";
 
     @Override
+    public Mechanisms getMechanism() {
+        return Mechanisms.ARGUMENT;
+    }
+
+    @Override
     protected SimpleMap makeMap(String[] args) {
         return key -> {
             Optional<String> keyval = Stream.of(args).filter(arg -> arg.startsWith(key)).findAny();

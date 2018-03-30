@@ -5,12 +5,13 @@ import java.util.Optional;
 
 public class Failure extends Payload {
 
+    public Mechanisms mechanism;
     public Possible<Object> oldVal;
     public Possible<Object> newVal;
     public Exception exception;
 
-    public Failure(Optional<Object> object, Configurable annotation, Field field, Possible<Object> oldVal, Possible<Object> newVal, Exception exception) {
-        super(object, annotation, field);
+    public Failure(Optional<Object> object, Configurable annotation, Field field, Mechanisms mechanism, Possible<Object> oldVal, Possible<Object> newVal, Exception exception) {
+        super(object, annotation, field, mechanism);
         this.oldVal = oldVal;
         this.newVal = newVal;
         this.exception = exception;

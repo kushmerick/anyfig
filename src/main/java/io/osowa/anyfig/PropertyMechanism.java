@@ -11,6 +11,11 @@ public class PropertyMechanism extends KeyValueMechanism {
 
     private static SimpleMap getProperty = STANDARD_GET_PROPERTY;
 
+    @Override
+    public Mechanisms getMechanism() {
+        return Mechanisms.PROPERTY;
+    }
+
     @Override protected SimpleMap makeMap(String[] ignored) {
         return getProperty;
     }

@@ -14,6 +14,11 @@ public class EnvVarMechanism extends KeyValueMechanism {
     private static SimpleMap getEnvVar = STANDARD_GET_ENV_VAR;
 
     @Override
+    public Mechanisms getMechanism() {
+        return Mechanisms.ENVVAR;
+    }
+
+    @Override
     protected SimpleMap makeMap(String[] ignored) {
         return getEnvVar;
     }

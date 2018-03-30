@@ -6,6 +6,6 @@ import java.lang.reflect.Field;
 
 public interface Mechanism {
 
-    Possible<Object> apply(Field field, Configurable annotation, String[] args);
+    Possible<Pair<Object,Mechanisms>> apply(Field field, Configurable annotation, String[] args);
 
 }

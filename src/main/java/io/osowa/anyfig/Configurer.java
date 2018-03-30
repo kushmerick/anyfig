@@ -12,12 +12,14 @@ public class Configurer {
 
     private final Anyfig anyfig;
     private final Registrar registrar;
+    private final History history;
     private final Retriever retriever = new Retriever();
     private final Coercer coercer = new Coercer();
 
-    public Configurer(Anyfig anyfig, Registrar registrar) {
+    public Configurer(Anyfig anyfig, Registrar registrar, History history) {
         this.anyfig = anyfig;
         this.registrar = registrar;
+        this.history = history;
     }
 
     public void configure(String[] args, Class<?> clazz) {
@@ -64,6 +66,7 @@ public class Configurer {
             anyfig.remoteRegister(field, annotation);
         }
         Optional<Callbacks> callbacks = registrar.getCallbacks(object, field);
+        Mechanisms mechanism[] = { null };
         Possible<?> oldVal[] = { Possible.absent() };
         Possible<?> newVal[] = { Possible.absent() };
         boolean eq[] = { false };
@@ -73,8 +76,10 @@ public class Configurer {
                 () -> {
                     Object obj = object.orElse(null);
                     oldVal[0] = Possible.of(field.get(obj));
-                    newVal[0] = getValue(annotation, field, args);
-                    if (newVal[0].present()) {
+                    Possible<Pair<Object,Mechanisms>> pair = getValue(annotation, field, args);
+                    if (pair.present()) {
+                        newVal[0] = Possible.of(pair.get().left);
+                        mechanism[0] = pair.get().right;
                         eq[0] = Objects.equals(oldVal[0].get(), newVal[0].get());
                         if (!eq[0]) {
                             field.set(obj, newVal[0].get());
@@ -83,14 +88,15 @@ public class Configurer {
                 }
             );
             if (newVal[0].present() && !eq[0]) {
-                Delta delta = new Delta(object, annotation, field, oldVal[0].get(), newVal[0].get());
+                Delta delta = new Delta(object, annotation, field, mechanism[0], oldVal[0].get(), newVal[0].get());
+                history.record(delta);
                 if (callbacks.isPresent()) {
                     invoke(callbacks, delta);
                 }
             }
         } catch (Exception exception) {
             try {
-                Failure failure = new Failure(object, annotation, field, (Possible<Object>) oldVal[0], (Possible<Object>) newVal[0], exception);
+                Failure failure = new Failure(object, annotation, field, mechanism[0], (Possible<Object>) oldVal[0], (Possible<Object>) newVal[0], exception);
                 invoke(callbacks, failure);
             } catch (Exception failureCallbackException) {
                 // exception while invoking the failure callback: suppress the original exception, then crash and burn
@@ -164,11 +170,11 @@ public class Configurer {
                 !element.getAnnotation(Configurable.class).ignore());
     }
 
-    private Possible<Object> getValue(Configurable annotation, Field field, String[] args) throws Exception {
-        Possible<Object> value = retriever.retrieve(field, annotation, args);
+    private Possible<Pair<Object,Mechanisms>> getValue(Configurable annotation, Field field, String[] args) throws Exception {
+        Possible<Pair<Object,Mechanisms>> value = retriever.retrieve(field, annotation, args);
         if (value.present()) {
-            Object coerced = coercer.coerce(value.get(), field.getType());
-            return Possible.of(coerced);
+            Object coerced = coercer.coerce(value.get().left, field.getType());
+            return Possible.of(Pair.of(coerced, value.get().right));
         } else {
             return Possible.absent();
         }

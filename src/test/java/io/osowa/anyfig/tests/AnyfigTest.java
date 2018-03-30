@@ -10,6 +10,8 @@ import io.osowa.anyfig.ConfigurationException;
 import io.osowa.anyfig.Delta;
 import io.osowa.anyfig.EnvVarMechanism;
 import io.osowa.anyfig.Failure;
+import io.osowa.anyfig.Mechanisms;
+import io.osowa.anyfig.Payload;
 import io.osowa.anyfig.PropertyMechanism;
 import io.osowa.anyfig.other.TestOtherPackageCallbacks;
 import io.osowa.anyfig.tests.subpackage.TestSubpackageCallbacks;
@@ -937,6 +939,22 @@ public class AnyfigTest {
     private static class TestRegisterFieldBiConsumer {
         final static int DEFAULT_FIELD = 2;
         static int field = 1;
+    }
+
+    @Test
+    public void testHistory() {
+        Payload.clock = () -> 12345L;
+        anyfig.configure(TestHistory.class);
+        List<Delta> history = anyfig.getHistory();
+        assertEquals(1, history.size());
+        assertEquals(12345L, history.get(0).timestamp);
+        assertEquals(Mechanisms.CONSTANT, history.get(0).mechanism);
+        assertEquals(0, history.get(0).oldVal);
+        assertEquals(2, history.get(0).newVal);
+    }
+    private static class TestHistory {
+        static final int DEFAULT_FIELD = 2;
+        static int field;
     }
 
 }

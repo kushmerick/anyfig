@@ -18,13 +18,15 @@ public abstract class KeyValueMechanism implements Mechanism {
 
     abstract protected List<String> makeCandidates(Field field, Configurable annotation);
 
+    abstract Mechanisms getMechanism();
+
     @Override
-    public Possible<Object> apply(Field field, Configurable annotation, String[] args) {
+    public Possible<Pair<Object,Mechanisms>> apply(Field field, Configurable annotation, String[] args) {
         SimpleMap map = makeMap(args);
         for (String key: makeCandidates(field, annotation)) {
             Optional<String> value = map.get(key);
             if (value.isPresent()) {
-                return Possible.of(value.get());
+                return Possible.of(Pair.of(value.get(), getMechanism()));
             }
         }
         return Possible.absent();

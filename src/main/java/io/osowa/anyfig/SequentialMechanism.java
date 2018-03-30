@@ -8,7 +8,7 @@ public abstract class SequentialMechanism implements Mechanism {
 
     abstract List<Mechanism> getMechanisms();
 
-    @Override public Possible<Object> apply(Field field, Configurable annotation, String[] args) {
+    @Override public Possible<Pair<Object,Mechanisms>> apply(Field field, Configurable annotation, String[] args) {
         return
             getMechanisms().stream()
             .map(mechanism -> mechanism.apply(field, annotation, args))

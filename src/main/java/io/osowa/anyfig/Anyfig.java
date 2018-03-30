@@ -5,6 +5,8 @@ import io.osowa.anyfig.api.xe.XeRemoteAPI;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -17,7 +19,8 @@ import java.util.stream.Stream;
 public class Anyfig implements AutoCloseable {
 
     private final Registrar registrar = new Registrar();
-    private final Configurer configurer = new Configurer(this, registrar);
+    private final History history = new History();
+    private final Configurer configurer = new Configurer(this, registrar, history);
     private final RemoteAPI remoteapi = new XeRemoteAPI();
 
     // A: register callbacks: five targets (fields, objects, classes, packages, global);
@@ -525,6 +528,12 @@ public class Anyfig implements AutoCloseable {
     // set an object as requested to do so by the Remote API
     public void remoteSet(Field field, Object value) throws Exception {
         Utils.setField(field, value);
+    }
+
+    // history
+
+    public List<Delta> getHistory() {
+        return Collections.unmodifiableList(history.get());
     }
 
 }

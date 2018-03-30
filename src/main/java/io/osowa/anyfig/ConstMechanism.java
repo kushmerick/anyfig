@@ -37,27 +37,29 @@ public class ConstMechanism extends SequentialMechanism {
             className = decoded.left; // some.pkg.Class
             constant = decoded.right; // SOME_CONST
         }
-        Possible<Object> value;
+        Possible<Pair<Object,Mechanisms>> pair;
         try {
-             value = tryConstant(constant, className);
+             pair = tryConstant(constant, className);
         } catch (Exception exception) {
+            // TODO: It seems weird to have both this throw and the one a few lines down?!!?
             throw new ConfigurationException("Failure while getting constant `" + annotation.constant() + '`', exception);
         }
-        if (value.present()) {
-            return value;
+        if (pair.present()) {
+            return pair;
         } else {
+            // TODO: It seems weird to have both this throw and the one a few lines up!??!
             throw new ConfigurationException("Unable to find constant `" + annotation.constant() + '`');
         }
     };
 
-    private Possible<Object> tryConstant(String constant, String className) throws Exception {
+    private Possible<Pair<Object,Mechanisms>> tryConstant(String constant, String className) throws Exception {
         Class<?> clazz = Class.forName(className);
         // yes, it would be simpler to use `clazz.getDeclaredField(constant)` but that
         // doesn't work for private fields (?!!?), so we search for it instead:
         for (Field field : clazz.getDeclaredFields()) {
             // note that we intentionally don't actually verify that the field is `final`
             if (field.getName().equals(constant) && Utils.isStatic(field)) {
-                return Possible.of(Utils.getField(field));
+                return Possible.of(Pair.of(Utils.getField(field), Mechanisms.CONSTANT));
             }
         }
         return Possible.absent();

@@ -7,6 +7,7 @@ import org.junit.Test;
 import io.osowa.anyfig.Configurable;
 import io.osowa.anyfig.Delta;
 import io.osowa.anyfig.Failure;
+import io.osowa.anyfig.Mechanisms;
 import io.osowa.anyfig.Possible;
 import io.osowa.anyfig.Utils;
 
@@ -38,6 +39,7 @@ public class UtilsTest {
             Optional.of(new TestLoggerCallbacksAndExceptionToString(1)),
             Configurable.DEFAULT,
             TestLoggerCallbacksAndExceptionToString.class.getField("field"),
+            Mechanisms.LITERAL,
             new TestLoggerCallbacksAndExceptionToString(2),
             new TestLoggerCallbacksAndExceptionToString(3));
         callback.accept(delta);
@@ -50,6 +52,7 @@ public class UtilsTest {
             Optional.of(new TestLoggerCallbacksAndExceptionToString(1)),
             Configurable.DEFAULT,
             TestLoggerCallbacksAndExceptionToString.class.getField("field"),
+            Mechanisms.LITERAL,
             Possible.absent(),
             Possible.absent(),
             exception);
@@ -118,6 +121,7 @@ public class UtilsTest {
             Optional.of(new TestLoggerCallbacksAndExceptionToString(1)),
             redacted,
             TestLoggerCallbacksAndExceptionToString.class.getField("field"),
+            Mechanisms.LITERAL,
             new TestLoggerCallbacksAndExceptionToString(secret1),
             new TestLoggerCallbacksAndExceptionToString(secret2));
         callback.accept(delta);
@@ -130,6 +134,7 @@ public class UtilsTest {
             Optional.of(new TestLoggerCallbacksAndExceptionToString(1)),
             redacted,
             TestLoggerCallbacksAndExceptionToString.class.getField("field"),
+            Mechanisms.LITERAL,
             Possible.absent(),
             Possible.absent(),
             exception);
