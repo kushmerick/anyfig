@@ -11,13 +11,13 @@ import java.util.function.Consumer;
 public class Callbacks {
 
     public final
-    Either<
+        Either<
             Pair<
-                                Optional<Consumer<Delta>>,
-                                Optional<Consumer<Failure>>>,
-                Pair<
-                    Optional<Method>,
-                    Optional<Method>>>
+                Optional<Consumer<Delta>>,
+                Optional<Consumer<Failure>>>,
+            Pair<
+                Optional<Method>,
+                Optional<Method>>>
         callbacks;
 
     public Callbacks(
