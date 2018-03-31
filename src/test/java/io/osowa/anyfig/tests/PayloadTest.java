@@ -3,7 +3,7 @@ package io.osowa.anyfig.tests;
 import org.junit.Test;
 
 import io.osowa.anyfig.Configurable;
-import io.osowa.anyfig.Mechanisms;
+import io.osowa.anyfig.mechanisms.Mechanisms;
 import io.osowa.anyfig.Payload;
 
 import java.lang.reflect.Field;

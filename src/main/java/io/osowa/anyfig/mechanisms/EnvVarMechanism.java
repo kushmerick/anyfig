@@ -1,6 +1,9 @@
-package io.osowa.anyfig;
+package io.osowa.anyfig.mechanisms;
 
 import com.google.common.base.CaseFormat;
+
+import io.osowa.anyfig.Configurable;
+import io.osowa.anyfig.utils.Utils;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;

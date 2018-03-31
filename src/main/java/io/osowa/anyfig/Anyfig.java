@@ -2,6 +2,7 @@ package io.osowa.anyfig;
 
 import io.osowa.anyfig.api.RemoteAPI;
 import io.osowa.anyfig.api.xe.XeRemoteAPI;
+import io.osowa.anyfig.utils.Utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

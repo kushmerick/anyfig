@@ -1,8 +1,6 @@
-package io.osowa.anyfig;
+package io.osowa.anyfig.utils;
 
 import java.util.NoSuchElementException;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 // like Optional, but permit null
 

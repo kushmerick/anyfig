@@ -7,9 +7,9 @@ import org.junit.Test;
 import io.osowa.anyfig.Configurable;
 import io.osowa.anyfig.Delta;
 import io.osowa.anyfig.Failure;
-import io.osowa.anyfig.Mechanisms;
-import io.osowa.anyfig.Possible;
-import io.osowa.anyfig.Utils;
+import io.osowa.anyfig.mechanisms.Mechanisms;
+import io.osowa.anyfig.utils.Possible;
+import io.osowa.anyfig.utils.Utils;
 
 import java.lang.annotation.Annotation;
 import java.util.Optional;

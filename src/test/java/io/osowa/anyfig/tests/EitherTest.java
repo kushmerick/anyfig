@@ -2,8 +2,8 @@ package io.osowa.anyfig.tests;
 
 import org.junit.Test;
 
-import io.osowa.anyfig.Either;
-import io.osowa.anyfig.Possible;
+import io.osowa.anyfig.utils.Either;
+import io.osowa.anyfig.utils.Possible;
 
 public class EitherTest {
 

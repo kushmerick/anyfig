@@ -1,4 +1,4 @@
-package io.osowa.anyfig;
+package io.osowa.anyfig.mechanisms;
 
 import java.util.Arrays;
 import java.util.List;

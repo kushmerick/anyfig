@@ -8,11 +8,11 @@ import io.osowa.anyfig.Anyfig;
 import io.osowa.anyfig.Configurable;
 import io.osowa.anyfig.ConfigurationException;
 import io.osowa.anyfig.Delta;
-import io.osowa.anyfig.EnvVarMechanism;
+import io.osowa.anyfig.mechanisms.EnvVarMechanism;
 import io.osowa.anyfig.Failure;
-import io.osowa.anyfig.Mechanisms;
+import io.osowa.anyfig.mechanisms.Mechanisms;
 import io.osowa.anyfig.Payload;
-import io.osowa.anyfig.PropertyMechanism;
+import io.osowa.anyfig.mechanisms.PropertyMechanism;
 import io.osowa.anyfig.other.TestOtherPackageCallbacks;
 import io.osowa.anyfig.tests.subpackage.TestSubpackageCallbacks;
 

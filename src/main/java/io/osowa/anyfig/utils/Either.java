@@ -1,4 +1,4 @@
-package io.osowa.anyfig;
+package io.osowa.anyfig.utils;
 
 public class Either<Left,Right> {
 

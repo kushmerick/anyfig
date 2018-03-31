@@ -1,4 +1,4 @@
-package io.osowa.anyfig;
+package io.osowa.anyfig.mechanisms;
 
 public enum Mechanisms {
 

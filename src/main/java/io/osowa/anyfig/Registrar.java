@@ -1,6 +1,6 @@
 package io.osowa.anyfig;
 
-import com.google.common.base.Strings;
+import io.osowa.anyfig.utils.Utils;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;

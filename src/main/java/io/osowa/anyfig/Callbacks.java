@@ -1,5 +1,9 @@
 package io.osowa.anyfig;
 
+import io.osowa.anyfig.utils.Either;
+import io.osowa.anyfig.utils.Pair;
+import io.osowa.anyfig.utils.Possible;
+
 import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -7,13 +11,13 @@ import java.util.function.Consumer;
 public class Callbacks {
 
     public final
-        Either<
+    Either<
             Pair<
-                Optional<Consumer<Delta>>,
-                Optional<Consumer<Failure>>>,
-            Pair<
-                Optional<Method>,
-                Optional<Method>>>
+                                Optional<Consumer<Delta>>,
+                                Optional<Consumer<Failure>>>,
+                Pair<
+                    Optional<Method>,
+                    Optional<Method>>>
         callbacks;
 
     public Callbacks(

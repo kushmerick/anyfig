@@ -5,8 +5,7 @@ import com.vmware.xenon.common.StatelessService;
 import com.vmware.xenon.common.UriUtils;
 
 import io.osowa.anyfig.Anyfig;
-import io.osowa.anyfig.Possible;
-import io.osowa.anyfig.Utils;
+import io.osowa.anyfig.utils.Utils;
 import io.osowa.anyfig.api.RemoteAPI;
 
 import java.lang.reflect.Field;

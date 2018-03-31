@@ -1,5 +1,7 @@
 package io.osowa.anyfig;
 
+import io.osowa.anyfig.mechanisms.Mechanisms;
+
 import java.lang.reflect.Field;
 import java.util.Optional;
 

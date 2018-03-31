@@ -1,4 +1,6 @@
-package io.osowa.anyfig;
+package io.osowa.anyfig.mechanisms;
+
+import io.osowa.anyfig.Configurable;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
