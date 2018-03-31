@@ -7,7 +7,15 @@ import java.util.function.Supplier;
 
 public class Payload {
 
-    public static Supplier<Long> clock = () -> System.currentTimeMillis();
+    public static Supplier<Long> clock;
+
+    public static void resetClock() {
+        clock = () -> System.currentTimeMillis();
+    }
+
+    static {
+        resetClock();
+    }
 
     public long timestamp = clock.get();
     public final Optional<Object> object;

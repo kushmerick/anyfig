@@ -5,7 +5,6 @@ import java.util.Optional;
 
 public class Failure extends Payload {
 
-    public Mechanisms mechanism;
     public Possible<Object> oldVal;
     public Possible<Object> newVal;
     public Exception exception;

@@ -943,14 +943,18 @@ public class AnyfigTest {
 
     @Test
     public void testHistory() {
-        Payload.clock = () -> 12345L;
-        anyfig.configure(TestHistory.class);
-        List<Delta> history = anyfig.getHistory();
-        assertEquals(1, history.size());
-        assertEquals(12345L, history.get(0).timestamp);
-        assertEquals(Mechanisms.CONSTANT, history.get(0).mechanism);
-        assertEquals(0, history.get(0).oldVal);
-        assertEquals(2, history.get(0).newVal);
+        try {
+            Payload.clock = () -> 12345L;
+            anyfig.configure(TestHistory.class);
+            List<Delta> history = anyfig.getHistory();
+            assertEquals(1, history.size());
+            assertEquals(12345L, history.get(0).timestamp);
+            assertEquals(Mechanisms.CONSTANT, history.get(0).mechanism);
+            assertEquals(0, history.get(0).oldVal);
+            assertEquals(2, history.get(0).newVal);
+        } finally {
+            Payload.resetClock();
+        }
     }
     private static class TestHistory {
         static final int DEFAULT_FIELD = 2;
