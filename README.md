@@ -62,7 +62,7 @@ Let's run our program:
     Configuring `static io.osowa.anyfig.examples.Example$Settings$Mode io.osowa.anyfig.examples.Example$Settings.mode` to `LEFT`
 
 This tiny examples shows that Anyfig doesn't touch `maxVehicles` or `minSpeed`, but it configures `mode` to `LEFT`. Here
-we're seeing just one of Anyfig's several mechanisms: Anyfig can configure a field name `fooBar` from a constant named
+we're seeing just one of Anyfig's several mechanisms: Anyfig can configure a field named `fooBar` from a constant named
 `DEFAULT_FOO_BAR`.
 
 Let's run the program again, this time supplying custom configuration with command-line arguments:
