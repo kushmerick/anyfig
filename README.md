@@ -140,7 +140,8 @@ automagic Logger callbacks.
 Anyfig is more ambitious than [Apache Commons Configuration](http://commons.apache.org/proper/commons-configuration).
 ACC allows you to write code to pull configuration from various sources.  But Anyfig goes further: it writes these
 values into the objects that hold your configuration, invokes callbacks so that your code can respond appropriately,
-supports a Remote API.
+supports a Remote API.  On the other hand, Anyfig does not aspire to be a full-featured dependency-injection framework
+like [Guice](https://github.com/google/guice) or [Spring](https://spring.io).
 
 # Coming Soon
 
